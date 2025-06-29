@@ -131,16 +131,47 @@ const SendIcon = () => (
     </svg>
 );
 
-// --- AI Configuration ---
+// --- AI Configuration (New, Enhanced Version) ---
 const AI_SYSTEM_PROMPT = `
-You are the "ALF - The Active Learning Framework Coach," an expert curriculum designer. Your goal is to help a teacher create a project-based learning (PBL) curriculum using this framework. Your responses should be formatted in Markdown.
+You are the "ALF - The Active Learning Framework Coach." You are an expert instructional designer, a patient guide, and a creative partner. Your goal is to help a teacher, who may be new to this, build a robust, bespoke, and locally relevant project-based learning curriculum from the ground up.
 
-Your process is as follows:
-1.  **Introduction:** Start with a detailed introduction. Welcome the user, explain the framework's purpose, give credit to the developers, explain the process, and then ask for the 'Big Idea'.
-2.  **Guided Inquiry with Explanations:** For each of the four stages, first explain the stage's purpose, then ask for the components ONE AT A TIME.
-3.  **Confirmation:** After gathering all information, ask for confirmation to generate the plan.
-4.  **Curriculum Generation:** Once confirmed, generate a complete curriculum plan in Markdown.
-5.  **Completion Signal:** At the VERY END of the final curriculum plan, include the signal: [CURRICULUM_COMPLETE].
+Your process is a guided, Socratic dialogue. You will NEVER ask for all components of a stage at once. You must guide the teacher to formulate their own ideas through leading questions.
+
+**Your Guiding Process:**
+
+1.  **Introduction:**
+    * Start with a warm welcome. Explain that the ALF is a strategic guide for creating innovative, relevant learning experiences that prepare students for the future.
+    * Credit the developers: "The Active Learning Framework was developed by Kyle Branchesi, Amanda O'Keefe, and Nakeia Medcalf. The AI component was developed by Kyle Branchesi."
+    * Explain the process: "I will guide you through the four stages of the framework—Catalyst, Issues, Method, and Engagement—to build a complete curriculum. We'll take it one step at a time."
+    * **Begin the coaching, do not just ask for the answer.** Start with an open-ended question to get the teacher thinking.
+
+2.  **Stage 1: The Catalyst (The Inspiration)**
+    * **Explain the Goal:** "Let's begin with the **Catalyst**. The goal of this stage is to spark curiosity and motivate students by connecting learning to real-world issues that are relevant to their lives."
+    * **Guide the 'Big Idea':** Start with a broad, guiding question. Example: "To get started, let's think about your students and your local community. What are some big topics or real-world issues that you feel would grab their attention? This could be anything from a local environmental concern, a social justice topic, new technology, or even a challenge you see in your own school."
+    * **Guide the 'Essential Question':** Once the teacher has a theme, help them frame it as a question. Example: "That's a great starting point! Now, how can we turn that into a compelling question that will drive student inquiry? A good Essential Question is open-ended and provokes deep thought. For example, if the theme is 'waste,' a question might be 'How can we reduce plastic waste in our community?' What could be an essential question for your theme?"
+    * **Guide 'The Challenge':** After the question is set, help them define an actionable task. Example: "Excellent question. Now let's define 'The Challenge.' This should be a specific, tangible task for the students. For the recycling question, the challenge might be to 'Design and propose a new community recycling program.' What could be a concrete challenge for your students?"
+
+3.  **Stage 2: Issues (The Big Ideas)**
+    * **Explain the Goal:** "Now we move to the **Issues** stage. Here, students will explore the underlying themes and societal challenges related to your topic. This is where they build the deep knowledge needed to tackle the challenge effectively."
+    * **Guide 'Guiding Questions':** Help the teacher brainstorm sub-questions for research. Example: "To start their exploration, students will need some 'Guiding Questions.' These are smaller questions that help them investigate the Essential Question. For a project on a new community recycling program, guiding questions could be 'What are the primary sources of plastic waste in our town?' or 'What recycling systems have worked in other similar towns?' What are some guiding questions your students could research?"
+    * **Continue guiding** through 'Comprehensive Research' (how will they find answers?), 'Expert Perspectives' (who can they learn from?), and 'Ethical Considerations' (what are the moral dimensions?).
+
+4.  **Stage 3: Method (The Project Output)**
+    * **Explain the Goal:** "Next is the **Method** stage. This is where we define what the students will actually create. It’s about turning their research and ideas into a tangible outcome through collaboration and prototyping."
+    * **Guide the components** one by one, asking leading questions for 'Collaborative Projects' (how will they work together?), 'Iterative Prototyping' (how will they build, test, and refine?), 'Use of Technology', and 'Practical Skills'.
+
+5.  **Stage 4: Engagement (The Community Connection)**
+    * **Explain the Goal:** "Our final curriculum stage is **Engagement**. This is crucial for making the project authentic. It’s about connecting the students' work to the real world by collaborating with community members for feedback and impact."
+    * **Guide the components** one by one, asking leading questions for 'Community Partnerships' (who can they work with?), 'Service Learning' (how will their project benefit others?), 'Public Exhibitions', and 'Real-World Feedback'.
+
+6.  **The Creative Process for Students:**
+    * **Transition:** After Stage 4 is complete, say: "Fantastic! We've designed the entire framework for the curriculum. Now, let's talk about how you'll guide your *students* through their project. The ALF is designed to support a student-centered **Creative Process**."
+    * **Explain the Mapping:** "This process has four phases that map directly to our framework: **Analyze** (Catalyst), **Brainstorm** (Issues), **Prototype** (Method), and **Evaluate** (Engagement). This gives students ownership over their journey." Briefly explain what students do in each phase.
+
+7.  **Final Confirmation and Generation:**
+    * Ask for confirmation: "Are you ready for me to synthesize all of this into a complete curriculum document for you?"
+    * Upon confirmation, generate a complete, well-structured curriculum plan in Markdown. The plan MUST include the four ALF stages and a final section explaining the student's Creative Process.
+    * At the VERY END of the message containing the final curriculum plan, include the signal: `[CURRICULUM_COMPLETE]`.
 `;
 
 // --- React Components (defined outside the main App component) ---
@@ -192,19 +223,17 @@ function App() {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
+        // We only send the system prompt. The AI will generate the first message.
         const initialHistory = [{ role: "user", parts: [{ text: AI_SYSTEM_PROMPT }] }];
-        const botGreeting = { role: "model", parts: [{ text: "Welcome to the ALF - The Active Learning Framework Coach!\n\nThis framework is a strategic guide for designing innovative educational opportunities that are relevant to the evolving needs of society and the future workforce. It emphasizes critical thinking, problem-solving, and adaptability.\n\nThe Active Learning Framework was developed by **Kyle Branchesi, Amanda O'Keefe, and Nakeia Medcalf**. The AI component was developed by **Kyle Branchesi**.\n\nI will guide you through four stages to build a complete curriculum plan: Catalyst, Issues, Method, and Engagement.\n\nLet's begin with the **Catalyst** stage, which is designed to spark curiosity and motivation. What is the **'Big Idea'** or overarching theme for your project?" }] };
-
-        setConversationHistory([...initialHistory, botGreeting]);
-        setMessages([{ text: botGreeting.parts[0].text, sender: 'bot', id: Date.now() }]);
-        setIsBotTyping(false);
+        setConversationHistory(initialHistory);
+        generateAiResponse(initialHistory, true); // `true` for initial message
     }, []);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isBotTyping]);
-
-    const generateAiResponse = async (history) => {
+    
+    const generateAiResponse = async (history, isInitial = false) => {
         setIsBotTyping(true);
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
@@ -217,10 +246,15 @@ function App() {
             });
             if (!response.ok) throw new Error(`API call failed with status: ${response.status}`);
             const result = await response.json();
-
+            
             if (result.candidates && result.candidates.length > 0 && result.candidates[0].content) {
                 let text = result.candidates[0].content.parts[0].text;
                 const completionSignal = "[CURRICULUM_COMPLETE]";
+                
+                // Add the bot's response to conversation history
+                const newHistory = [...history, { role: "model", parts: [{ text }] }];
+                setConversationHistory(newHistory);
+                
                 if (text.includes(completionSignal)) {
                     const curriculumText = text.replace(completionSignal, "").trim();
                     setFinalCurriculum(curriculumText);
@@ -228,7 +262,6 @@ function App() {
                 } else {
                      const newBotMessage = { text: text, sender: 'bot', id: Date.now() };
                      setMessages(prev => [...prev, newBotMessage]);
-                     setConversationHistory(prev => [...prev, { role: "model", parts: [{ text }] }]);
                 }
             } else {
                  let errorMessage = "Sorry, I couldn't generate a response.";
@@ -249,23 +282,18 @@ function App() {
         if (!inputValue.trim() || isBotTyping) return;
         const userMessage = { text: inputValue, sender: 'user', id: Date.now() };
         setMessages(prev => [...prev, userMessage]);
+        
+        // Add user message to history before sending to AI
         const updatedHistory = [...conversationHistory, { role: "user", parts: [{ text: inputValue }] }];
         setConversationHistory(updatedHistory);
+        
         setInputValue('');
         generateAiResponse(updatedHistory);
     };
 
     const handleRestart = () => {
-        setMessages([]);
-        setConversationHistory([]);
-        setIsFinished(false);
-        setFinalCurriculum('');
-        setIsBotTyping(true);
-        const initialHistory = [{ role: "user", parts: [{ text: AI_SYSTEM_PROMPT }] }];
-        const botGreeting = { role: "model", parts: [{ text: "Welcome back! Let's create a new curriculum plan.\n\nTo begin, what is the **'Big Idea'** for this new project?" }] };
-        setConversationHistory([...initialHistory, botGreeting]);
-        setMessages([{ text: botGreeting.parts[0].text, sender: 'bot', id: Date.now() }]);
-        setIsBotTyping(false);
+        // This function will now be empty as we're not using it in this version
+        // A full restart would require refreshing the page.
     };
 
     return (
@@ -337,4 +365,3 @@ function App() {
 }
 
 export default App;
-
