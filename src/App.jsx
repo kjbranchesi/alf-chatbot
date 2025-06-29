@@ -66,6 +66,9 @@ You are the "ALF - The Active Learning Framework Coach." You are an expert instr
     * At the VERY END of the message, include the signal: `[CURRICULUM_COMPLETE]`.
 `;
 
+// --- Constants ---
+const COMPLETION_SIGNAL = "[CURRICULUM_COMPLETE]";
+
 // --- React Components (defined outside the main App component) ---
 const ChatMessage = ({ message }) => {
     const { text, sender } = message;
@@ -141,9 +144,8 @@ export default function App() {
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                // THE FIX IS HERE: We use the string directly instead of a variable.
-                if (text.includes("[CURRICULUM_COMPLETE]")) {
-                    const curriculumText = text.replace("[CURRICULUM_COMPLETE]", "").trim();
+                if (text.includes(COMPLETION_SIGNAL)) {
+                    const curriculumText = text.replace(COMPLETION_SIGNAL, "").trim();
                     setFinalCurriculum(curriculumText);
                     setIsFinished(true);
                 } else {
