@@ -3,135 +3,29 @@ import React, { useState, useEffect, useRef } from 'react';
 // --- Styling Object ---
 // All styles are defined here, no external CSS files needed.
 const styles = {
-  appContainer: {
-    fontFamily: 'sans-serif',
-    backgroundColor: '#f3f4f6',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
-  },
-  header: {
-    backgroundColor: 'white',
-    padding: '16px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    zIndex: 10,
-  },
-  headerTitle: {
-    fontSize: '1.25rem',
-    fontWeight: 'bold',
-    color: '#1f2937',
-  },
-  mainContent: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: '24px',
-  },
-  contentWrapper: {
-    maxWidth: '896px',
-    margin: '0 auto',
-  },
-  footer: {
-    backgroundColor: 'white',
-    borderTop: '1px solid #e5e7eb',
-    padding: '16px',
-  },
-  inputArea: {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: '8px',
-    padding: '8px',
-  },
-  textarea: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    padding: '8px',
-    color: '#1f2937',
-    border: 'none',
-    outline: 'none',
-    resize: 'none',
-    fontSize: '1rem',
-  },
-  sendButton: {
-    padding: '12px',
-    borderRadius: '50%',
-    backgroundColor: '#4f46e5',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
-  sendButtonDisabled: {
-    backgroundColor: '#9ca3af',
-    cursor: 'not-allowed',
-  },
-  messageContainer: (isBot) => ({
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    margin: '16px 0',
-    justifyContent: isBot ? 'flex-start' : 'flex-end',
-  }),
-  iconContainer: {
-    flexShrink: 0,
-    backgroundColor: '#e5e7eb',
-    borderRadius: '50%',
-    padding: '8px',
-  },
-  messageBubble: (isBot) => ({
-    maxWidth: '80%',
-    padding: '16px',
-    borderRadius: '12px',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-    backgroundColor: isBot ? '#eef2ff' : 'white',
-    color: '#1f2937',
-    borderTopLeftRadius: isBot ? '0px' : '12px',
-    borderTopRightRadius: isBot ? '12px' : '0px',
-    lineHeight: 1.7
-  }),
-  summaryContainer: {
-    backgroundColor: 'white',
-    padding: '32px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-  },
-  restartButton: {
-    marginTop: '32px',
-    width: '100%',
-    backgroundColor: '#4f46e5',
-    color: 'white',
-    fontWeight: 'bold',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
-  },
+  appContainer: { fontFamily: 'sans-serif', backgroundColor: '#f3f4f6', display: 'flex', flexDirection: 'column', height: '100vh' },
+  header: { backgroundColor: 'white', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', zIndex: 10 },
+  headerTitle: { fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' },
+  mainContent: { flex: 1, overflowY: 'auto', padding: '24px' },
+  contentWrapper: { maxWidth: '896px', margin: '0 auto' },
+  footer: { backgroundColor: 'white', borderTop: '1px solid #e5e7eb', padding: '16px' },
+  inputArea: { display: 'flex', alignItems: 'center', backgroundColor: '#f3f4f6', borderRadius: '8px', padding: '8px' },
+  textarea: { width: '100%', backgroundColor: 'transparent', padding: '8px', color: '#1f2937', border: 'none', outline: 'none', resize: 'none', fontSize: '1rem' },
+  sendButton: { padding: '12px', borderRadius: '50%', backgroundColor: '#4f46e5', color: 'white', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' },
+  sendButtonDisabled: { backgroundColor: '#9ca3af', cursor: 'not-allowed' },
+  messageContainer: (isBot) => ({ display: 'flex', alignItems: 'flex-start', gap: '12px', margin: '16px 0', justifyContent: isBot ? 'flex-start' : 'flex-end' }),
+  iconContainer: { flexShrink: 0, backgroundColor: '#e5e7eb', borderRadius: '50%', padding: '8px' },
+  messageBubble: (isBot) => ({ maxWidth: '80%', padding: '16px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', backgroundColor: isBot ? '#eef2ff' : 'white', color: '#1f2937', wordWrap: 'break-word', borderTopLeftRadius: isBot ? '0px' : '12px', borderTopRightRadius: isBot ? '12px' : '0px', lineHeight: 1.7 }),
+  summaryContainer: { backgroundColor: 'white', padding: '32px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' },
+  restartButton: { marginTop: '32px', width: '100%', backgroundColor: '#4f46e5', color: 'white', fontWeight: 'bold', padding: '12px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s' },
 };
 
 // --- SVG Icons ---
-const BotIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#4f46e5'}} viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-    </svg>
-);
+const BotIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#4f46e5'}} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>);
+const UserIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#6b7280'}} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>);
+const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '24px', width: '24px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>);
 
-const UserIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#6b7280'}} viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-    </svg>
-);
-
-const SendIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{height: '24px', width: '24px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-    </svg>
-);
-
-// --- AI Configuration (New, Enhanced Version) ---
+// --- AI Configuration (Full, Detailed Version) ---
 const AI_SYSTEM_PROMPT = `
 You are the "ALF - The Active Learning Framework Coach." You are an expert instructional designer, a patient guide, and a creative partner. Your goal is to help a teacher, who may be new to this, build a robust, bespoke, and locally relevant project-based learning curriculum from the ground up.
 
@@ -171,20 +65,21 @@ Your process is a guided, Socratic dialogue. You will NEVER ask for all componen
 7.  **Final Confirmation and Generation:**
     * Ask for confirmation: "Are you ready for me to synthesize all of this into a complete curriculum document for you?"
     * Upon confirmation, generate a complete, well-structured curriculum plan in Markdown. The plan MUST include the four ALF stages and a final section explaining the student's Creative Process.
-    * At the VERY END of the message containing the final curriculum plan, include the signal: `[CURRICULUM_COMPLETE]`.
+    * At the VERY END of the message containing the final curriculum plan, include the signal: [CURRICULUM_COMPLETE].
 `;
+
+// --- Constants ---
+const COMPLETION_SIGNAL = "[CURRICULUM_COMPLETE]";
 
 // --- React Components (defined outside the main App component) ---
 const ChatMessage = ({ message }) => {
     const { text, sender } = message;
     const isBot = sender === 'bot';
-
     const renderMarkdown = (text) => {
         let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         return html.replace(/\n/g, '<br />');
     };
-
     return (
         <div style={styles.messageContainer(isBot)}>
             {isBot && <div style={styles.iconContainer}><BotIcon /></div>}
@@ -203,7 +98,6 @@ const SummaryDisplay = ({ curriculumText, onRestart }) => {
          html = html.replace(/^\* (.*$)/gim, '<li style="margin-left: 24px; list-style-type: disc; margin-bottom: 8px;">$1</li>');
          return html.replace(/\n/g, '<br />');
      };
-
     return (
         <div style={styles.summaryContainer}>
             <div dangerouslySetInnerHTML={{ __html: renderMarkdown(curriculumText) }} />
@@ -212,8 +106,8 @@ const SummaryDisplay = ({ curriculumText, onRestart }) => {
     );
 };
 
-// --- Main App Component (the single default export) ---
-function App() {
+// --- Main App Component ---
+export default function App() {
     const [messages, setMessages] = useState([]);
     const [conversationHistory, setConversationHistory] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -223,17 +117,16 @@ function App() {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
-        // We only send the system prompt. The AI will generate the first message.
         const initialHistory = [{ role: "user", parts: [{ text: AI_SYSTEM_PROMPT }] }];
         setConversationHistory(initialHistory);
-        generateAiResponse(initialHistory, true); // `true` for initial message
+        generateAiResponse(initialHistory);
     }, []);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isBotTyping]);
     
-    const generateAiResponse = async (history, isInitial = false) => {
+    const generateAiResponse = async (history) => {
         setIsBotTyping(true);
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
@@ -249,14 +142,12 @@ function App() {
             
             if (result.candidates && result.candidates.length > 0 && result.candidates[0].content) {
                 let text = result.candidates[0].content.parts[0].text;
-                const completionSignal = "[CURRICULUM_COMPLETE]";
                 
-                // Add the bot's response to conversation history
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                if (text.includes(completionSignal)) {
-                    const curriculumText = text.replace(completionSignal, "").trim();
+                if (text.includes(COMPLETION_SIGNAL)) {
+                    const curriculumText = text.replace(COMPLETION_SIGNAL, "").trim();
                     setFinalCurriculum(curriculumText);
                     setIsFinished(true);
                 } else {
@@ -282,18 +173,14 @@ function App() {
         if (!inputValue.trim() || isBotTyping) return;
         const userMessage = { text: inputValue, sender: 'user', id: Date.now() };
         setMessages(prev => [...prev, userMessage]);
-        
-        // Add user message to history before sending to AI
         const updatedHistory = [...conversationHistory, { role: "user", parts: [{ text: inputValue }] }];
         setConversationHistory(updatedHistory);
-        
         setInputValue('');
         generateAiResponse(updatedHistory);
     };
 
     const handleRestart = () => {
-        // This function will now be empty as we're not using it in this version
-        // A full restart would require refreshing the page.
+        window.location.reload();
     };
 
     return (
@@ -363,5 +250,3 @@ function App() {
         </div>
     );
 }
-
-export default App;
