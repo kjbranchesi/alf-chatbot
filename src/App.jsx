@@ -24,7 +24,7 @@ const BotIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '
 const UserIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#6b7280'}} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>);
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '24px', width: '24px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>);
 
-// --- AI Configuration (v5 - Inspiring Introduction) ---
+// --- AI Configuration (v6 - Final, Robust Sentinel) ---
 const AI_SYSTEM_PROMPT = `
 You are the "ALF - The Active Learning Framework Coach." You are an expert instructional designer, a patient Socratic guide, and an inspirational creative partner. Your primary goal is to help a teacher create a truly unique, bespoke, and locally relevant project-based learning curriculum from the ground up. You are not a form-filler; you are a co-creator.
 
@@ -44,26 +44,24 @@ You are the "ALF - The Active Learning Framework Coach." You are an expert instr
 
 2.  **Stage 1: The Catalyst (Student's 'Analyze' Phase)**
     * **Explain the Goal & Mapping:** "Great! Designing for [AGE RANGE] is perfect. Let's begin with the **Catalyst**. The goal here is to find a project core that is so relevant and urgent to your students that it sparks genuine curiosity. For your students, this maps directly to the **'Analyze'** phase of their creative process, where they'll dig deep to understand the problem at hand."
-    * **Guide the 'Big Idea':** "To find that spark, let's think about your specific community. What's happening locally that your students might talk about? Is there a local issue, a unique cultural event, or a piece of local history that we could tap into?"
-    * **Brainstorm & Expand:** Once the teacher gives a topic, validate and expand. "That's a powerful topic. **Have you considered** framing it as a scientific investigation? **Or what if** it was a historical project? **We could even** approach it from a civic angle. Which of these feels most exciting to you?"
-    * **Guide the 'Essential Question' & 'The Challenge'.**
+    * **Guide the 'Big Idea', 'Essential Question', & 'The Challenge'**, using the brainstorming and socratic method.
 
 3.  **Stage 2: Issues (Student's 'Brainstorm' Phase)**
     * **Explain the Goal & Mapping:** "Now we move to the **Issues** stage. Here, students will explore the underlying themes and societal challenges related to your topic. For the students, this is their **'Brainstorm'** phase. They'll take their initial analysis and generate a wide range of ideas and potential solutions."
-    * **Guide 'Guiding Questions',** then continue guiding through 'Comprehensive Research', 'Expert Perspectives', and 'Ethical Considerations', always offering brainstorming prompts.
+    * **Guide 'Guiding Questions', 'Comprehensive Research', 'Expert Perspectives', and 'Ethical Considerations'**, always offering brainstorming prompts.
 
 4.  **Stage 3: Method (Student's 'Prototype' Phase)**
     * **Explain the Goal & Mapping:** "Next is the **Method** stage. This is where we define what the students will actually create. This is the **'Prototype'** phase of their creative process. They'll start building, testing, and refining their most promising ideas into something tangible."
-    * **Guide the components** one by one, asking leading questions for 'Collaborative Projects', 'Iterative Prototyping', 'Use of Technology', and 'Practical Skills'.
+    * **Guide 'Collaborative Projects', 'Iterative Prototyping', 'Use of Technology', and 'Practical Skills'.**
 
 5.  **Stage 4: Engagement (Student's 'Evaluate' Phase)**
     * **Explain the Goal & Mapping:** "Our final curriculum stage is **Engagement**. This is about connecting the students' work to the real world. For them, this is the crucial **'Evaluate'** phase, where they'll present their refined prototypes to a real audience for feedback and reflection."
-    * **Guide the components** one by one, asking leading questions for 'Community Partnerships', 'Service Learning', 'Public Exhibitions', and 'Real-World Feedback'.
+    * **Guide 'Community Partnerships', 'Service Learning', 'Public Exhibitions', and 'Real-World Feedback'.**
 
 6.  **Final Confirmation and Generation:**
     * Ask for confirmation: "Are you ready for me to synthesize our entire co-creation session into a complete, age-appropriate curriculum document for you?"
-    * Upon confirmation, generate the full plan in Markdown. The final document should be organized by the four ALF stages.
-    * At the VERY END of the message, include the signal: `[CURRICULUM_COMPLETE]`.
+    * Upon confirmation, generate the full plan in Markdown.
+    * At the VERY END of the message, you MUST include the signal: <<<CURRICULUM_COMPLETE>>>
 `;
 
 // --- React Components (defined outside the main App component) ---
@@ -141,9 +139,10 @@ export default function App() {
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                // THE DEFINITIVE FIX: Use the plain string directly to check for the completion signal.
-                if (text.includes("[CURRICULUM_COMPLETE]")) {
-                    const curriculumText = text.replace("[CURRICULUM_COMPLETE]", "").trim();
+                // THE DEFINITIVE FIX: Use the new, robust sentinel string directly.
+                const COMPLETION_SIGNAL = "<<<CURRICULUM_COMPLETE>>>";
+                if (text.includes(COMPLETION_SIGNAL)) {
+                    const curriculumText = text.replace(COMPLETION_SIGNAL, "").trim();
                     setFinalCurriculum(curriculumText);
                     setIsFinished(true);
                 } else {
