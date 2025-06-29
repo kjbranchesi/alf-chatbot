@@ -141,7 +141,7 @@ export default function App() {
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                // THE FIX IS HERE: We use the plain string directly to avoid the ReferenceError.
+                // THE DEFINITIVE FIX: Use the plain string directly to check for the completion signal.
                 if (text.includes("[CURRICULUM_COMPLETE]")) {
                     const curriculumText = text.replace("[CURRICULUM_COMPLETE]", "").trim();
                     setFinalCurriculum(curriculumText);
