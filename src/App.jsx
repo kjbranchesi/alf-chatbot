@@ -66,9 +66,6 @@ You are the "ALF - The Active Learning Framework Coach." You are an expert instr
     * At the VERY END of the message, include the signal: `[CURRICULUM_COMPLETE]`.
 `;
 
-// --- Constants ---
-const COMPLETION_SIGNAL = "[CURRICULUM_COMPLETE]";
-
 // --- React Components (defined outside the main App component) ---
 const ChatMessage = ({ message }) => {
     const { text, sender } = message;
@@ -144,8 +141,9 @@ export default function App() {
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                if (text.includes(COMPLETION_SIGNAL)) {
-                    const curriculumText = text.replace(COMPLETION_SIGNAL, "").trim();
+                // THE FIX IS HERE: We use the plain string directly to avoid the ReferenceError.
+                if (text.includes("[CURRICULUM_COMPLETE]")) {
+                    const curriculumText = text.replace("[CURRICULUM_COMPLETE]", "").trim();
                     setFinalCurriculum(curriculumText);
                     setIsFinished(true);
                 } else {
