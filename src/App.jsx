@@ -116,7 +116,7 @@ export default function App() {
     useEffect(() => {
         const initialHistory = [{ role: "user", parts: [{ text: AI_SYSTEM_PROMPT }] }];
         const botGreeting = { role: "model", parts: [{ text: "Welcome to the ALF - The Active Learning Framework Coach!\n\nThis framework is a strategic guide for designing innovative educational opportunities that are relevant to the evolving needs of society and the future workforce. It emphasizes critical thinking, problem-solving, and adaptability.\n\nThe Active Learning Framework was developed by **Kyle Branchesi, Amanda O'Keefe, and Nakeia Medcalf**. The AI component was developed by **Kyle Branchesi**.\n\nI will guide you through four stages to build a complete curriculum plan: Catalyst, Issues, Method, and Engagement.\n\nLet's begin with the **Catalyst** stage, which is designed to spark curiosity and motivation. What is the **'Big Idea'** or overarching theme for your project?" }] };
-        
+
         setConversationHistory([...initialHistory, botGreeting]);
         setMessages([{ text: botGreeting.parts[0].text, sender: 'bot', id: Date.now() }]);
         setIsBotTyping(false);
@@ -125,10 +125,9 @@ export default function App() {
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isBotTyping]);
-    
+
     const generateAiResponse = async (history) => {
         setIsBotTyping(true);
-        // Vite uses `import.meta.env.VITE_VARIABLE_NAME` to access environment variables
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
@@ -145,10 +144,10 @@ export default function App() {
             }
 
             const result = await response.json();
-            
+
             if (result.candidates && result.candidates.length > 0 && result.candidates[0].content) {
                 let text = result.candidates[0].content.parts[0].text;
-                
+
                 const completionSignal = "[CURRICULUM_COMPLETE]";
                 if (text.includes(completionSignal)) {
                     const curriculumText = text.replace(completionSignal, "").trim();
@@ -185,7 +184,7 @@ export default function App() {
 
         const updatedHistory = [...conversationHistory, { role: "user", parts: [{ text: inputValue }] }];
         setConversationHistory(updatedHistory);
-        
+
         setInputValue('');
         generateAiResponse(updatedHistory);
     };
@@ -199,7 +198,7 @@ export default function App() {
 
         const initialHistory = [{ role: "user", parts: [{ text: AI_SYSTEM_PROMPT }] }];
         const botGreeting = { role: "model", parts: [{ text: "Welcome back! Let's create a new curriculum plan.\n\nTo begin, what is the **'Big Idea'** for this new project?" }] };
-        
+
         setConversationHistory([...initialHistory, botGreeting]);
         setMessages([{ text: botGreeting.parts[0].text, sender: 'bot', id: Date.now() }]);
         setIsBotTyping(false);
@@ -279,3 +278,4 @@ export default function App() {
         </div>
     );
 }
+git add .
