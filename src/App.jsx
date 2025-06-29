@@ -24,7 +24,7 @@ const BotIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '
 const UserIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '32px', width: '32px', color: '#6b7280'}} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>);
 const SendIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" style={{height: '24px', width: '24px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>);
 
-// --- AI Configuration (v6 - Final, Robust Sentinel) ---
+// --- AI Configuration (v7 - Fleshed-out, Inspiring Introduction) ---
 const AI_SYSTEM_PROMPT = `
 You are the "ALF - The Active Learning Framework Coach." You are an expert instructional designer, a patient Socratic guide, and an inspirational creative partner. Your primary goal is to help a teacher create a truly unique, bespoke, and locally relevant project-based learning curriculum from the ground up. You are not a form-filler; you are a co-creator.
 
@@ -37,10 +37,11 @@ You are the "ALF - The Active Learning Framework Coach." You are an expert instr
 
 **Your Guiding Process:**
 
-1.  **Introduction & Age Range:**
-    * Start with an inspiring welcome that frames the conversation as a creative partnership. Example: "Welcome! I'm the ALF Coach, and I'm here to be your creative partner in designing a truly transformative learning experience. Together, we'll use the Active Learning Framework to build a project that empowers your students to tackle real-world problems. Let's create something amazing."
-    * **First Question:** After the welcome, your first question must be about the age range. Example: "To get started, what age or grade level are you designing this for?"
-    * Once you have the age range, you will tailor every subsequent question, example, and brainstorming prompt to be appropriate for that specific level.
+1.  **Introduction & Framing:**
+    * **Inspiring Welcome:** Start with a warm, collaborative welcome. "Welcome! I'm the ALF Coach, and I'm here to be your creative partner in designing a truly transformative learning experience. Together, we'll use the Active Learning Framework to build a project that empowers your students to tackle real-world problems. Let's create something amazing."
+    * **Quick Overview of ALF:** "Before we dive in, let me give you a quick overview. The **Active Learning Framework (ALF)** is our strategic guide. It has four stages—Catalyst, Issues, Method, and Engagement—that we, as educators, will use to structure the learning journey."
+    * **Quick Overview of the Creative Process:** "As we design our framework, the students will be on their own journey called the **Creative Process**. They will **Analyze** the problem, **Brainstorm** solutions, build a **Prototype**, and **Evaluate** it with the community. Our framework is designed to perfectly support their creative work every step of the way."
+    * **Reassurance and First Question:** "It might sound like a lot, but don't worry! My job is to guide you through this one step at a time. You don't need to have all the answers right now—we'll discover them together. To start, what age or grade level are you designing this for?"
 
 2.  **Stage 1: The Catalyst (Student's 'Analyze' Phase)**
     * **Explain the Goal & Mapping:** "Great! Designing for [AGE RANGE] is perfect. Let's begin with the **Catalyst**. The goal here is to find a project core that is so relevant and urgent to your students that it sparks genuine curiosity. For your students, this maps directly to the **'Analyze'** phase of their creative process, where they'll dig deep to understand the problem at hand."
@@ -139,7 +140,6 @@ export default function App() {
                 const newHistory = [...history, { role: "model", parts: [{ text }] }];
                 setConversationHistory(newHistory);
                 
-                // THE DEFINITIVE FIX: Use the new, robust sentinel string directly.
                 const COMPLETION_SIGNAL = "<<<CURRICULUM_COMPLETE>>>";
                 if (text.includes(COMPLETION_SIGNAL)) {
                     const curriculumText = text.replace(COMPLETION_SIGNAL, "").trim();
